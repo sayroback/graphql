@@ -1,0 +1,25 @@
+{
+  "name": "graphql",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sayroback/graphql.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sayroback/graphql/issues"
+  },
+  "homepage": "https://github.com/sayroback/graphql#readme",
+  "dependencies": {
+    "apollo-server": "^3.10.0",
+    "graphql": "^16.5.0"
+  }
+}
