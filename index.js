@@ -1,4 +1,6 @@
 import { ApolloServer, gql } from "apollo-server";
+import { v1 as uuid } from "uuid";
+
 const persons = [
   {
     name: "Midu",
@@ -66,8 +68,20 @@ const resolvers = {
       return persons.find((person) => person.name === name);
     },
   },
+  // Mutación para añadir una nueva persona a la lista
+  Mutation: {
+    addPerson: (root, args) => {
+      // ...args es una destructuración de los datos y asi ya no hace falta hacer person.name = args.name.
+      const person = { ...args, id: uuid() };
+      // En este caso solo añadimos a la persona con un push al arreglo.
+      persons.push(person);
+      return person;
+    },
+  },
+
   // Aquí creamos un campo basado en un calculo hecho con los datos originales. Debemos agregarlo en typeDefs para que sea visible.
   Person: {
+    // Un objeto dentro de otro formado con los datos originales.
     address: (root) => {
       return {
         street: root.street,

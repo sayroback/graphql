@@ -20,6 +20,7 @@
   "homepage": "https://github.com/sayroback/graphql#readme",
   "dependencies": {
     "apollo-server": "^3.10.0",
-    "graphql": "^16.5.0"
+    "graphql": "^16.5.0",
+    "uuid": "^8.3.2"
   }
 }
