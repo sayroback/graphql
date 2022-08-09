@@ -1,4 +1,4 @@
-import { ApolloServer, gql } from "apollo-server";
+import { ApolloServer, gql, UserInputError } from "apollo-server";
 import { v1 as uuid } from "uuid";
 
 const persons = [
@@ -71,6 +71,12 @@ const resolvers = {
   // Mutación para añadir una nueva persona a la lista
   Mutation: {
     addPerson: (root, args) => {
+      // Validación en la mutación para que no se pueda añadir una persona con el mismo nombre
+      if (persons.find((person) => person.name === args.name)) {
+        throw new UserInputError("Person already exists", {
+          invalidArgs: args.name,
+        });
+      }
       // ...args es una destructuración de los datos y asi ya no hace falta hacer person.name = args.name.
       const person = { ...args, id: uuid() };
       // En este caso solo añadimos a la persona con un push al arreglo.
