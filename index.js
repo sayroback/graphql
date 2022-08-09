@@ -22,23 +22,39 @@ const persons = [
   },
 ];
 
-//Definimos el tipo de datos que vamos a usar en nuestra aplicación
+/*
+Definimos el tipo de datos que vamos a usar en nuestra aplicación
+Apollo ya resuelve las relaciones entre los datos que se van a usar no es necesario hacerlo manualmente, amenos que nosotros creemos un nuevo campo.
+
+type Address es un nuevo campo que reorganiza el objeto persons. En resolver declaramos como con los datos originales crear un nuevo objeto con los datos city y street.
+
+Cambiar los datos en GraphQL se llama mutación, añadiremos una nueva persona a la lista addPerson.
+  Primero definimos los datos de la persona que vamos a añadir.
+*/
 const typeDefs = `
+  type Address{
+    city: String!
+    street: String!
+  }
   type Person {
     name: String!
     phone: String
-    street: String!
-    city: String!
-    address: String!
     id: ID!
+    address: Address
   }
   type Query {
     personCount: Int!
     allPersons: [Person]!
     findPerson(name: String!): Person
   }
+  type Mutation {
+    addPerson(
+      name: String!
+      phone: String
+      street: String!
+      city: String!): Person
+  }
 `;
-//Apollo ya resuelve las relaciones entre los datos que se van a usar no es necesario hacerlo manualmente, amenos que nosotros creemos un nuevo campo.
 
 // Definimos el resolver (es el como resolverá la petición) de nuestra aplicación para los tipos de datos definidos anteriormente
 const resolvers = {
@@ -52,7 +68,12 @@ const resolvers = {
   },
   // Aquí creamos un campo basado en un calculo hecho con los datos originales. Debemos agregarlo en typeDefs para que sea visible.
   Person: {
-    address: (root) => `${root.street}, ${root.city}`,
+    address: (root) => {
+      return {
+        street: root.street,
+        city: root.city,
+      };
+    },
   },
 };
 // Creamos el servidor de Apollo con los tipos de datos y el resolver
