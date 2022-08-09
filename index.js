@@ -59,6 +59,10 @@ const typeDefs = `
       phone: String
       street: String!
       city: String!): Person
+      editNumber(
+        name: String!
+        phone: String!
+      ): Person
   }
 `;
 
@@ -94,6 +98,21 @@ const resolvers = {
       // En este caso solo añadimos a la persona con un push al arreglo.
       persons.push(person);
       return person;
+    },
+    editNumber: (root, args) => {
+      // Editamos o agregamos el número de teléfono a la persona que se encuentra en la lista.
+      const personIndex = persons.findIndex(
+        (person) => person.name === args.name
+      );
+      if (personIndex === -1) return null;
+      // Si no se encuentra la persona en la lista, retornamos un error.
+      const person = persons[personIndex];
+      // Actualizamos el número de teléfono de la persona.
+      const updatedPerson = { ...person, phone: args.phone };
+      // Actualizamos a la persona en la lista.
+      persons[personIndex] = updatedPerson;
+      // Retornamos la persona actualizada.
+      return updatedPerson;
     },
   },
 
