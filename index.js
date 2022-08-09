@@ -1,29 +1,6 @@
 import { ApolloServer, gql, UserInputError } from "apollo-server";
 import { v1 as uuid } from "uuid";
-
-const persons = [
-  {
-    name: "Midu",
-    phone: "224-876-5262",
-    street: "123 Main St",
-    city: "Anytown",
-    id: "456456",
-  },
-  {
-    name: "Youssef",
-    phone: "754-876-9876",
-    street: "5434 Main St",
-    city: "Anytown",
-    id: "7474646",
-  },
-  {
-    name: "Itzi",
-    street: "5435 Main St",
-    city: "Anytown",
-    id: "234678",
-  },
-];
-
+import axios from "axios";
 /*
 Definimos el tipo de datos que vamos a usar en nuestra aplicación
 Apollo ya resuelve las relaciones entre los datos que se van a usar no es necesario hacerlo manualmente, amenos que nosotros creemos un nuevo campo.
@@ -33,6 +10,7 @@ type Address es un nuevo campo que reorganiza el objeto persons. En resolver dec
 Cambiar los datos en GraphQL se llama mutación, añadiremos una nueva persona a la lista addPerson.
   Primero definimos los datos de la persona que vamos a añadir.
 */
+
 const typeDefs = `
   enum YesNo {
     YES
@@ -66,12 +44,14 @@ const typeDefs = `
   }
 `;
 
+// Llamamos los datos desde una API externa
+const { data: persons } = await axios.get("http://localhost:3000/persons");
 // Definimos el resolver (es el como resolverá la petición) de nuestra aplicación para los tipos de datos definidos anteriormente
 const resolvers = {
   Query: {
     personCount: () => persons.length,
 
-    allPersons: (root, args) => {
+    allPersons: async (root, args) => {
       if (!args.phone) return persons;
       const byPhone = (person) =>
         // Filtramos a las personas que tengan teléfono añadiéndoles el valor enum YesNo. YES si tiene teléfono, NO si no.
